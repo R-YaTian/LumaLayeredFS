@@ -91,7 +91,32 @@ def locateFS() :
 	(fsUserHandle,) = struct.unpack('I', code[t - 4: t]);
 	save('fsUserHandle', fsUserHandle);
 
+def walk(dirname):
+                filelist = []
+                for root,dirs,files in os.walk(dirname):
+                                for filename in files:
+                                                fullname=os.path.join(root,filename)
+                                                filelist.append(fullname)
+                return filelist
 
+def Cmpfile(fn1,fn2):
+                f1 = open(fn1,'rb')
+                f2 = open(fn2,'rb')
+                d1 = f1.read()
+                d2 = f2.read()
+                f1.close()
+                f2.close()
+                if d1==d2:
+                                return 1
+                else:
+                                return 0
+def mkdir(path):
+                isExists=os.path.exists(path)
+                if not isExists:
+                                os.makedirs(path)
+                                return True
+                else:
+                                return False
 
 
 
@@ -128,3 +153,61 @@ print(str);
 
 with open('plugin\\source\\autogen.h', 'w') as f:
 	f.write(str);
+
+if not os.path.exists('workdir\\romfs1'):
+        os.system("ctrtool -t romfs --romfsdir=workdir\\romfs1 workdir\\romfs1.bin")
+if not os.path.exists('workdir\\romfs2'):
+        os.system("ctrtool -t romfs --romfsdir=workdir\\romfs2 workdir\\romfs2.bin")
+
+dir1 = 'workdir\\romfs1'
+dir2 = 'workdir\\romfs2'
+dirout = filePath
+filelist1 = walk(dir1)
+filelist2 = walk(dir2)
+for old in filelist1:
+                for new in filelist2:
+                                if old[len(dir1):]==new[len(dir2):]:
+                                                r = Cmpfile(old,new)
+                                                if r==1:
+                                                                break
+                                                elif r==0:
+                                                                infile = open(new,'rb')
+                                                                indata = infile.read()
+                                                                outpath = 'workdir\\'+dirout+new[len(dir2):]
+                                                                outdir = os.path.split(outpath)[0]
+                                                                mkdir(outdir)
+                                                                outfile = open(outpath,'wb')
+                                                                outfile.write(indata)
+                                                                print 'saved:'+outpath
+                                                                outfile.close()
+                                                                infile.close()
+                                                                break
+                                else:
+                                                temp = dir1+new[len(dir2):]
+                                                if os.path.exists(temp):
+                                                                temp = dir2+old[len(dir1):]
+                                                                if not os.path.exists(temp):
+                                                                                outpath = 'workdir\\'+dirout+old[len(dir1):]
+                                                                                if not os.path.exists(outpath):
+                                                                                                infile = open(old,'rb')
+                                                                                                indata = infile.read()
+                                                                                                outdir = os.path.split(outpath)[0]
+                                                                                                mkdir(outdir)
+                                                                                                outfile = open(outpath,'wb')
+                                                                                                outfile.write(indata)
+                                                                                                print 'saved:'+outpath
+                                                                                                outfile.close()
+                                                                                                infile.close()
+                                                                                                break
+                                                else:
+                                                                outpath = 'workdir\\'+dirout+new[len(dir2):]
+                                                                if not os.path.exists(outpath):
+                                                                                infile = open(new,'rb')
+                                                                                indata = infile.read()
+                                                                                outdir = os.path.split(outpath)[0]
+                                                                                mkdir(outdir)
+                                                                                outfile = open(outpath,'wb')
+                                                                                outfile.write(indata)
+                                                                                print 'saved:'+outpath
+                                                                                outfile.close()
+                                                                                infile.close()
