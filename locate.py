@@ -158,6 +158,8 @@ if not os.path.exists('workdir\\romfs1'):
         os.system("ctrtool -t romfs --romfsdir=workdir\\romfs1 workdir\\romfs1.bin")
 if not os.path.exists('workdir\\romfs2'):
         os.system("ctrtool -t romfs --romfsdir=workdir\\romfs2 workdir\\romfs2.bin")
+if not (os.path.exists('workdir\\romfs1')or os.path.exists('workdir\\romfs2')):
+        exit
 
 dir1 = 'workdir\\romfs1'
 dir2 = 'workdir\\romfs2'
