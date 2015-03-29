@@ -186,22 +186,7 @@ for old in filelist1:
                                                                 break
                                 else:
                                                 temp = dir1+new[len(dir2):]
-                                                if os.path.exists(temp):
-                                                                temp = dir2+old[len(dir1):]
-                                                                if not os.path.exists(temp):
-                                                                                outpath = 'workdir\\'+dirout+old[len(dir1):]
-                                                                                if not os.path.exists(outpath):
-                                                                                                infile = open(old,'rb')
-                                                                                                indata = infile.read()
-                                                                                                outdir = os.path.split(outpath)[0]
-                                                                                                mkdir(outdir)
-                                                                                                outfile = open(outpath,'wb')
-                                                                                                outfile.write(indata)
-                                                                                                print 'saved:'+outpath
-                                                                                                outfile.close()
-                                                                                                infile.close()
-                                                                                                break
-                                                else:
+                                                if not os.path.exists(temp):
                                                                 outpath = 'workdir\\'+dirout+new[len(dir2):]
                                                                 if not os.path.exists(outpath):
                                                                                 infile = open(new,'rb')
