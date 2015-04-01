@@ -118,7 +118,15 @@ def mkdir(path):
                 else:
                                 return False
 
-
+def getid():
+        exh = open('workdir\\exheader.bin','rb')
+        exh.seek(512)
+        lid = str(hex(struct.unpack('I',exh.read(4))[0]))[2:]
+        hid = str(hex(struct.unpack('I',exh.read(4))[0]))[2:]
+        lid = '0'*(8-len(lid))+lid
+        hid = '0'*(8-len(hid))+hid
+        jumpid = hid+lid
+        return jumpid
 
 with open(sys.argv[1], 'rb') as f:
 	code = f.read();
@@ -142,7 +150,9 @@ for i in addrdb:
 	if (addrdb[i] == '0'):
 		print('***WARNING*** Failed locating symbol %s , some patches may not work.' % i); 
 
-filePath = raw_input('Enter the folder of the layeredFS file:');
+filePath = 'layeredfs/'+raw_input('Enter the folder of the layeredFS file:');
+if len(filePath)==10:
+        filePath = filePath+getid()
 		
 str = 'u32 fsMountArchive = ' + addrdb['mountArchive'] + ';\n';
 str += 'u32 fsRegArchive = ' + addrdb['regArchive'] + ';\n';
@@ -163,7 +173,7 @@ if not (os.path.exists('workdir\\romfs1')or os.path.exists('workdir\\romfs2')):
 
 dir1 = 'workdir\\romfs1'
 dir2 = 'workdir\\romfs2'
-dirout = filePath
+dirout = filePath.replace('/','\\')
 filelist1 = walk(dir1)
 filelist2 = walk(dir2)
 for old in filelist1:
