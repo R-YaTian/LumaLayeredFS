@@ -25,7 +25,7 @@ python 2.7: https://www.python.org/
 
  1. 将解密后的 exefs.bin 和 exheader.bin 放入 workdir 目录，将原版的 romfs 文件夹命名为 romfs1 或 romfs.bin 文件重命名为 romfs1.bin ，翻译后的 romfs 文件夹重命名为 romfs2 或 romfs.bin 重命名为 romfs2.bin ，放入 workdir 目录。
  2. 运行 build_layeredfs.bat，中途会提示：Enter the folder of the layeredFS file: 此时输入翻译数据包的目录名，例如 layered （建议使用游戏的简称，不要和已知的游戏重复）。如果输入为空（直接按空格），将会以游戏ID作为目录名
- 3. 将会在 workdir 里生成的 layeredfs 目录和 plugin 目录，拷贝到 SD 卡。
+ 3. 将在 workdir 里生成的 layeredfs 目录和 plugin 目录，拷贝到 SD 卡。
  4. 运行正版游戏后，屏幕会闪绿色，并开始应用翻译数据，重定向文件。
  
 
