@@ -99,7 +99,7 @@ def walk(dirname):
                                                 filelist.append(fullname)
                 return filelist
 
-def Cmpfile(fn1,fn2):
+def cmpfile(fn1,fn2):
                 f1 = open(fn1,'rb')
                 f2 = open(fn2,'rb')
                 d1 = f1.read()
@@ -107,9 +107,9 @@ def Cmpfile(fn1,fn2):
                 f1.close()
                 f2.close()
                 if d1==d2:
-                                return 1
+                                return False
                 else:
-                                return 0
+                                return d2
 def mkdir(path):
                 isExists=os.path.exists(path)
                 if not isExists:
@@ -165,46 +165,35 @@ with open('plugin\\source\\autogen.h', 'w') as f:
 	f.write(str);
 
 if not os.path.exists('workdir\\romfs1'):
-        os.system("ctrtool -t romfs --romfsdir=workdir\\romfs1 workdir\\romfs1.bin")
+        os.system("3dstool -xtf romfs workdir\\romfs1.bin --romfs-dir workdir\\romfs1")
 if not os.path.exists('workdir\\romfs2'):
-        os.system("ctrtool -t romfs --romfsdir=workdir\\romfs2 workdir\\romfs2.bin")
+        os.system("3dstool -xtf romfs workdir\\romfs2.bin --romfs-dir workdir\\romfs2")
 if not (os.path.exists('workdir\\romfs1')or os.path.exists('workdir\\romfs2')):
         exit
 
 dir1 = 'workdir\\romfs1'
 dir2 = 'workdir\\romfs2'
-dirout = filePath.replace('/','\\')
+dirout = 'workdir\\'+filePath.replace('/','\\')
+mkdir(dirout)
 filelist1 = walk(dir1)
 filelist2 = walk(dir2)
-for old in filelist1:
-                for new in filelist2:
-                                if old[len(dir1):]==new[len(dir2):]:
-                                                r = Cmpfile(old,new)
-                                                if r==1:
-                                                                break
-                                                elif r==0:
-                                                                infile = open(new,'rb')
-                                                                indata = infile.read()
-                                                                outpath = 'workdir\\'+dirout+new[len(dir2):]
-                                                                outdir = os.path.split(outpath)[0]
-                                                                mkdir(outdir)
-                                                                outfile = open(outpath,'wb')
-                                                                outfile.write(indata)
-                                                                print 'saved:'+outpath
-                                                                outfile.close()
-                                                                infile.close()
-                                                                break
-                                else:
-                                                temp = dir1+new[len(dir2):]
-                                                if not os.path.exists(temp):
-                                                                outpath = 'workdir\\'+dirout+new[len(dir2):]
-                                                                if not os.path.exists(outpath):
-                                                                                infile = open(new,'rb')
-                                                                                indata = infile.read()
-                                                                                outdir = os.path.split(outpath)[0]
-                                                                                mkdir(outdir)
-                                                                                outfile = open(outpath,'wb')
-                                                                                outfile.write(indata)
-                                                                                print 'saved:'+outpath
-                                                                                outfile.close()
-                                                                                infile.close()
+for filename in filelist2:
+        if filename.replace(dir2,dir1) in filelist1:
+                compareresult = cmpfile(filename.replace(dir2,dir1),filename)
+                if compareresult:
+                        outfilename = filename.replace(dir2,dirout)
+                        mkdir(os.path.split(outfilename)[0])
+                        with open(outfilename,'wb') as outfile:
+                                outfile.write(compareresult)
+                                print 'Saved: '+outfilename
+
+
+
+
+
+
+
+
+
+
+
