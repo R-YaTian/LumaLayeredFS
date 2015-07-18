@@ -186,6 +186,13 @@ for filename in filelist2:
                         with open(outfilename,'wb') as outfile:
                                 outfile.write(compareresult)
                                 print 'Saved: '+outfilename
+        elif not filename.replace(dir2,dir1) in filelist1:
+                outfilename = filename.replace(dir2,dirout)
+                mkdir(os.path.split(outfilename)[0])
+                with open(outfilename,'wb') as outfile:
+                        with open(filename,'rb')as infile:
+                                outfile.write(infile.read())
+                                print 'Saved: '+outfilename
 
 
 
