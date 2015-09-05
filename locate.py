@@ -2,6 +2,8 @@ import sys
 import os
 import glob
 import struct
+import filecmp
+import shutil
 
 code = '';
 addrdb = {};
@@ -179,20 +181,17 @@ filelist1 = walk(dir1)
 filelist2 = walk(dir2)
 for filename in filelist2:
         if filename.replace(dir2,dir1) in filelist1:
-                compareresult = cmpfile(filename.replace(dir2,dir1),filename)
-                if compareresult:
+                compareresult = filecmp.cmp(filename.replace(dir2,dir1),filename)
+                if not compareresult:
                         outfilename = filename.replace(dir2,dirout)
                         mkdir(os.path.split(outfilename)[0])
-                        with open(outfilename,'wb') as outfile:
-                                outfile.write(compareresult)
-                                print 'Saved: '+outfilename
+                        shutil.copy(filename,outfilename)
+                        print 'Copy: '+outfilename
         elif not filename.replace(dir2,dir1) in filelist1:
                 outfilename = filename.replace(dir2,dirout)
                 mkdir(os.path.split(outfilename)[0])
-                with open(outfilename,'wb') as outfile:
-                        with open(filename,'rb')as infile:
-                                outfile.write(infile.read())
-                                print 'Saved: '+outfilename
+                shutil.copy(filename,outfilename)
+                print 'Copy: '+outfilename
 
 
 
