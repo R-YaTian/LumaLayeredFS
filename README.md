@@ -1,6 +1,4 @@
-# layeredFS Toolkit
-
-layeredFS 游戏翻译数据包生成工具
+# LumaLayeredFS Toolkit
 
 English Manual: https://github.com/44670/layeredFS/wiki/manual
 
