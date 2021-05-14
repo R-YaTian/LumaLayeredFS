@@ -121,7 +121,7 @@ def mkdir(path):
                                 return False
 
 def getid():
-        exh = open('workdir\\exheader.bin','rb')
+        exh = open('workdir\\exh.bin','rb')
         exh.seek(512)
         lid = str(hex(struct.unpack('I',exh.read(4))[0]))[2:]
         hid = str(hex(struct.unpack('I',exh.read(4))[0]))[2:]
@@ -152,10 +152,9 @@ for i in addrdb:
 	if (addrdb[i] == '0'):
 		print('***WARNING*** Failed locating symbol %s , some patches may not work.' % i); 
 
-filePath = 'layeredfs/'+raw_input('Enter the folder of the layeredFS file:');
-if len(filePath)==10:
-        filePath = filePath+getid()
-		
+filePath = 'luma/titles/';
+filePath = filePath+getid()+'/romfs'
+
 str = 'u32 fsMountArchive = ' + addrdb['mountArchive'] + ';\n';
 str += 'u32 fsRegArchive = ' + addrdb['regArchive'] + ';\n';
 str += 'u32 userFsTryOpenFile = ' + addrdb['userFsTryOpen'] + ';\n';
@@ -192,14 +191,3 @@ for filename in filelist2:
                 mkdir(os.path.split(outfilename)[0])
                 shutil.copy(filename,outfilename)
                 print 'Copy: '+outfilename
-
-
-
-
-
-
-
-
-
-
-
